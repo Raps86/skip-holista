@@ -1,0 +1,170 @@
+[
+  {
+    "nazwa": "Krill Oil",
+    "sklad": "100% olej z kryla (Euphausia superba)",
+    "dzialanie": "Dla seniorów, sportowców, wspiera odporność i układ nerwowy",
+    "kategoria": "Oleje",
+    "kod": "H26–H28",
+    "dawkowanie": "1 kapsułka na 10 kg masy ciała dziennie"
+  },
+  {
+    "nazwa": "Omega-3 Fish Oil",
+    "sklad": "100% olej z dzikich ryb (sardele, ostroboki, śledzie, makrele – bez tuńczyków)",
+    "dzialanie": "Źródło omega-3, poprawia apetyt, wspiera skórę i stawy, idealny do BARF",
+    "kategoria": "Oleje",
+    "kod": "H31–H34",
+    "dawkowanie": "1 kapsułka na 10 kg m.c. lub 1 pompka na 5–10 kg m.c. dziennie"
+  },
+  {
+    "nazwa": "Omega-3 Puppy & Kitty",
+    "sklad": "100% olej z dzikich ryb",
+    "dzialanie": "Od 4 tygodnia życia, wspomaga rozwój układu nerwowego i ruchowego, poprawia apetyt",
+    "kategoria": "Oleje",
+    "kod": "H60–H61",
+    "dawkowanie": "1 naciśnięcie pompki na 5 kg m.c. dziennie"
+  },
+  {
+    "nazwa": "Cod Liver Oil",
+    "sklad": "100% olej z wątroby dorsza",
+    "dzialanie": "Źródło witaminy A i D, wspiera skórę, układ odpornościowy, idealny do BARF",
+    "kategoria": "Oleje",
+    "kod": "H19–H21, H65",
+    "dawkowanie": "1 pompka (1 ml) na 5–10 kg m.c. dziennie"
+  },
+  {
+    "nazwa": "Salmon Oil",
+    "sklad": "100% olej z łososia",
+    "dzialanie": "Wspiera skórę i sierść, atopie, stawy, idealny dla psów aktywnych",
+    "kategoria": "Oleje",
+    "kod": "H69–H72",
+    "dawkowanie": "1 pompka (1 ml) na 5 kg m.c. dziennie"
+  },
+  {
+    "nazwa": "Cistus Herb (Czystek)",
+    "sklad": "BIO czystek",
+    "dzialanie": "Działa antywirusowo, przeciwgrzybiczo, przeciwbakteryjnie",
+    "kategoria": "Zioła i roślinne",
+    "kod": null,
+    "dawkowanie": "Małe psy i koty: 0,5 miarki; Średnie: 1 miarka; Duże: 2 miarki dziennie"
+  },
+  {
+    "nazwa": "Alga AS Organic",
+    "sklad": "Ascophyllum nodosum",
+    "dzialanie": "Źródło jodu, wspiera zęby i metabolizm, działa jako naturalna multiwitamina",
+    "kategoria": "Zioła i roślinne",
+    "kod": null,
+    "dawkowanie": "1/4–1 miarki dziennie w zależności od wielkości psa"
+  },
+  {
+    "nazwa": "Rosa Canina",
+    "sklad": "BIO owoc róży",
+    "dzialanie": "Wzmacnia odporność, wspiera stawy i regenerację",
+    "kategoria": "Zioła i roślinne",
+    "kod": null,
+    "dawkowanie": "0,5–2 miarki dziennie"
+  },
+  {
+    "nazwa": "Chlorella",
+    "sklad": "100% chlorella",
+    "dzialanie": "Detoksykacja, wsparcie wątroby i nerek, otyłość",
+    "kategoria": "Zioła i roślinne",
+    "kod": null,
+    "dawkowanie": "0,5–1 g na 10 kg m.c. dziennie"
+  },
+  {
+    "nazwa": "Spirulina",
+    "sklad": "100% spirulina",
+    "dzialanie": "Bogate źródło białka, żelaza i chlorofilu, detoks i odporność",
+    "kategoria": "Zioła i roślinne",
+    "kod": null,
+    "dawkowanie": "0,5–1 g na 10 kg m.c. dziennie"
+  },
+  {
+    "nazwa": "Relaxing Cat Weed",
+    "sklad": "Korzeń kozłka lekarskiego",
+    "dzialanie": "Uspokaja koty, redukuje stres, naturalny relaksant",
+    "kategoria": "Zioła i roślinne",
+    "kod": null,
+    "dawkowanie": "Koty: 0,25–0,5 miarki dziennie"
+  },
+  {
+    "nazwa": "Kaolin",
+    "sklad": "Naturalna glinka kaolinowa",
+    "dzialanie": "Pomaga przy biegunkach, poprawia higienę jamy ustnej",
+    "kategoria": "Zioła i roślinne",
+    "kod": null,
+    "dawkowanie": "Małe psy/koty: 1 g; Średnie: 2 g; Duże: 3–5 g dziennie"
+  },
+  {
+    "nazwa": "Green Lipped Mussel",
+    "sklad": "Ekstrakt z małży nowozelandzkiej",
+    "dzialanie": "Źródło glikozaminoglikanów, wspiera stawy i rozwój chrząstki",
+    "kategoria": "Stawy i ruch",
+    "kod": null,
+    "dawkowanie": "0,5–1 g na 10 kg m.c. dziennie"
+  },
+  {
+    "nazwa": "MSM",
+    "sklad": "Methylsulfonylmethane",
+    "dzialanie": "Przeciwzapalne, na bóle stawów, alergie i stany zwyrodnieniowe",
+    "kategoria": "Stawy i ruch",
+    "kod": null,
+    "dawkowanie": "50–100 mg na 1 kg m.c. dziennie"
+  },
+  {
+    "nazwa": "Boswellia Serrata",
+    "sklad": "60% kwasów bosweliowych",
+    "dzialanie": "Naturalny przeciwzapalny, wspiera stawy i jelita",
+    "kategoria": "Stawy i ruch",
+    "kod": null,
+    "dawkowanie": "1 miarka (500 mg) na 10 kg m.c. dziennie"
+  },
+  {
+    "nazwa": "Devil’s Claw Root",
+    "sklad": "Czarci pazur (Harpagophytum procumbens)",
+    "dzialanie": "Na stawy, ból, zwyrodnienia, wspomaga mobilność",
+    "kategoria": "Stawy i ruch",
+    "kod": null,
+    "dawkowanie": "1 g na 10 kg m.c. dziennie"
+  },
+  {
+    "nazwa": "ArthroDoctor",
+    "sklad": "Kolagen, czarci pazur, kurkuma, boswellia",
+    "dzialanie": "Stawy, rehabilitacja, przeciwzapalne działanie",
+    "kategoria": "PRO VETS",
+    "kod": "HD1–HD3",
+    "dawkowanie": "Małe psy: 1/2 miarki; Średnie: 1 miarka; Duże: 2 miarki dziennie"
+  },
+  {
+    "nazwa": "Vitamin B12 + B3",
+    "sklad": "Hydrolizaty drożdżowe, witamina B12, witamina B3",
+    "dzialanie": "Wspomaga odporność, układ nerwowy i jelitowy",
+    "kategoria": "PRO VETS",
+    "kod": "HD8",
+    "dawkowanie": "Małe psy/koty: 1/4 miarki; Średnie: 1/2 miarki; Duże: 1 miarka dziennie"
+  },
+  {
+    "nazwa": "Arginina",
+    "sklad": "L-arginina 98,5%",
+    "dzialanie": "IBD, cukrzyca, wsparcie regeneracji jelit",
+    "kategoria": "PRO VETS",
+    "kod": null,
+    "dawkowanie": "100–250 mg/kg m.c. dziennie (indywidualna ocena)"
+  },
+  {
+    "nazwa": "Biotin (Skin & Coat)",
+    "sklad": "Biotyna, premiks witaminowy",
+    "dzialanie": "Poprawia kondycję sierści i skóry",
+    "kategoria": "PRO VETS",
+    "kod": null,
+    "dawkowanie": "1 miarka dziennie na 10–15 kg m.c."
+  },
+  {
+    "nazwa": "Beta-Glucan",
+    "sklad": "1,3–1,6 beta-D-glukan z drożdży",
+    "dzialanie": "Wzmacnia odporność, działa przeciwinfekcyjnie",
+    "kategoria": "PRO VETS",
+    "kod": null,
+    "dawkowanie": "Małe psy/koty: 1/4 miarki; Średnie: 1/2 miarki; Duże: 1 miarka dziennie"
+  }
+]
