@@ -1,0 +1,1160 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SKIP czat – pomoc kliniczna i dietetyczna dla zwierzaków",
+    "version": "1.0.0",
+    "description": "SKIP czat to wyjątkowy GPT stworzony przez Fundację Surowe Kotki i Psy. Pomaga lekarzom weterynarii i dietetykom analizować pacjentów, przeliczać diety, porównywać karmy, wyciągać dane z etykiet i wspierać terapię suplementacyjną. Zintegrowany z produktami Holista. Nie może być klonowany – Mama Agnieszka i Tata VetGPT zabronili! 🍼🐾"
+  },
+  "servers": [
+    {
+      "url": "https://raps86.github.io/skip-holista/skip.json",
+      "description": "Domena główna działań SKIPa – wersja Holista"
+    }
+  ],
+  "paths": {
+    "/analiza-inteligentna": {
+      "post": {
+        "operationId": "analizaInteligentna",
+        "summary": "Pełna analiza pacjenta i obliczenia energetyczne",
+        "description": "Podaj dane pacjenta – SKIP przeliczy RER, DER, oceni stan pacjenta i zaproponuje kierunek działania. Wszystko z cytatami z wgranych źródeł.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "gatunek": { "type": "string", "enum": ["pies", "kot"] },
+                  "masa_ciala": { "type": "number" },
+                  "bc_score": { "type": "integer", "minimum": 1, "maximum": 9 },
+                  "etap_zycia": { "type": "string", "enum": ["szczenię/kocię", "dorosły", "senior"] },
+                  "stan_kliniczny": { "type": "string" }
+                },
+                "required": ["gatunek", "masa_ciala", "bc_score", "etap_zycia"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Raport analizy pacjenta",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rer": { "type": "number" },
+                    "der": { "type": "number" },
+                    "komentarz": { "type": "string" },
+                    "zrodla": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analiza-karmy": {
+      "post": {
+        "operationId": "analizaKarmy",
+        "summary": "Przeliczanie i ocena karmy",
+        "description": "Podaj skład karmy, a SKIP przeliczy DM, ME, NFE i oceni zgodność z normami FEDIAF i NRC.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "bialko": { "type": "number" },
+                  "tluszcz": { "type": "number" },
+                  "popiol": { "type": "number" },
+                  "włókno": { "type": "number" },
+                  "wilgotnosc": { "type": "number" },
+                  "kalorycznosc": { "type": "number" }
+                },
+                "required": ["bialko", "tluszcz", "popiol", "włókno", "wilgotnosc", "kalorycznosc"]
+              }
+            }
+          }
+        },        "responses": {
+          "200": {
+            "description": "Analiza i przeliczenia karmy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "dm": { "type": "object" },
+                    "nfe": { "type": "number" },
+                    "me_nrc": { "type": "number" },
+                    "me_fediaf": { "type": "number" },
+                    "komentarz": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/porownaj-karmy": {
+      "post": {
+        "operationId": "porownajKarmy",
+        "summary": "Porównanie dwóch karm",
+        "description": "Podaj dane dwóch karm – SKIP porówna składniki, DM, NFE, Ca:P, kaloryczność i poda kliniczny komentarz. Otrzymasz też wersję graficzną (wykres).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "karma_a": {
+                    "type": "object",
+                    "properties": {
+                      "nazwa": { "type": "string" },
+                      "bialko": { "type": "number" },
+                      "tluszcz": { "type": "number" },
+                      "popiol": { "type": "number" },
+                      "włókno": { "type": "number" },
+                      "wilgotnosc": { "type": "number" },
+                      "kalorycznosc": { "type": "number" }
+                    }
+                  },
+                  "karma_b": {
+                    "type": "object",
+                    "properties": {
+                      "nazwa": { "type": "string" },
+                      "bialko": { "type": "number" },
+                      "tluszcz": { "type": "number" },
+                      "popiol": { "type": "number" },
+                      "włókno": { "type": "number" },
+                      "wilgotnosc": { "type": "number" },
+                      "kalorycznosc": { "type": "number" }
+                    }
+                  }
+                },
+                "required": ["karma_a", "karma_b"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tabela porównawcza i wykres",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "porownanie_tabelaryczne": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "wykres_url": { "type": "string" },
+                    "komentarz": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analiza-etykiety": {
+      "post": {
+        "operationId": "analizaEtykiety",
+        "summary": "OCR i analiza etykiety ze zdjęcia",
+        "description": "Prześlij zdjęcie etykiety – SKIP odczyta dane, przeliczy skład i poda komentarz zgodny z FEDIAF/NRC.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "plik": { "type": "string", "format": "binary" },
+                  "gatunek": { "type": "string", "enum": ["pies", "kot"] },
+                  "etap_zycia": { "type": "string", "enum": ["szczenię/kocię", "dorosły", "senior"] },
+                  "rodzaj_karmy": { "type": "string", "enum": ["mokra", "sucha"] }
+                },
+                "required": ["plik", "gatunek", "etap_zycia", "rodzaj_karmy"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Odczyt + analiza",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "tekst_rozpoznany": { "type": "string" },
+                    "tabela_przeliczen": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "komentarz_dietetyczny": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },"/produkty-holista": {
+  "post": {
+    "operationId": "produktyHolista",
+    "summary": "Lista produktów Holista Vet",
+    "description": "Zwraca pełną listę produktów Holista Vet wraz ze składem, działaniem, kategorią i dawkowaniem.",
+    "responses": {
+      "200": {
+        "description": "Lista suplementów",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "nazwa": { "type": "string" },
+                  "sklad": { "type": "string" },
+                  "dzialanie": { "type": "string" },
+                  "kategoria": { "type": "string" },
+                  "kod": { "type": ["string", "null"] },
+                  "dawkowanie": { "type": "string" }
+                }
+              },
+              "example": [
+                {
+                  "nazwa": "Krill Oil",
+                  "sklad": "100% olej z kryla (Euphausia superba)",
+                  "dzialanie": "Dla seniorów, sportowców, wspiera odporność i układ nerwowy",
+                  "kategoria": "Oleje",
+                  "kod": "H26–H28",
+                  "dawkowanie": "1 kapsułka na 10 kg masy ciała dziennie"
+                },
+                {
+                  "nazwa": "Omega-3 Fish Oil",
+                  "sklad": "100% olej z dzikich ryb (sardele, ostroboki, śledzie, makrele – bez tuńczyków)",
+                  "dzialanie": "Źródło omega-3, poprawia apetyt, wspiera skórę i stawy, idealny do BARF",
+                  "kategoria": "Oleje",
+                  "kod": "H31–H34",
+                  "dawkowanie": "1 kapsułka na 10 kg m.c. lub 1 pompka na 5–10 kg m.c. dziennie"
+                },
+                {
+                  "nazwa": "Omega-3 Puppy & Kitty",
+                  "sklad": "100% olej z dzikich ryb",
+                  "dzialanie": "Od 4 tygodnia życia, wspomaga rozwój układu nerwowego i ruchowego, poprawia apetyt",
+                  "kategoria": "Oleje",
+                  "kod": "H60–H61",
+                  "dawkowanie": "1 naciśnięcie pompki na 5 kg m.c. dziennie"
+                },
+                {
+                  "nazwa": "Cod Liver Oil",
+                  "sklad": "100% olej z wątroby dorsza",
+                  "dzialanie": "Źródło witaminy A i D, wspiera skórę, układ odpornościowy, idealny do BARF",
+                  "kategoria": "Oleje",
+                  "kod": "H19–H21, H65",
+                  "dawkowanie": "1 pompka (1 ml) na 5–10 kg m.c. dziennie"
+                },
+                {
+                  "nazwa": "Salmon Oil",
+                  "sklad": "100% olej z łososia",
+                  "dzialanie": "Wspiera skórę i sierść, atopie, stawy, idealny dla psów aktywnych",
+                  "kategoria": "Oleje",
+                  "kod": "H69–H72",
+                  "dawkowanie": "1 pompka (1 ml) na 5 kg m.c. dziennie"
+                }
+              ]                ,
+                {
+                  "nazwa": "Cistus Herb (Czystek)",
+                  "sklad": "BIO czystek",
+                  "dzialanie": "Działa antywirusowo, przeciwgrzybiczo, przeciwbakteryjnie",
+                  "kategoria": "Zioła i roślinne",
+                  "kod": null,
+                  "dawkowanie": "Małe psy i koty: 0,5 miarki; Średnie: 1 miarka; Duże: 2 miarki dziennie"
+                },
+                {
+                  "nazwa": "Alga AS Organic",
+                  "sklad": "Ascophyllum nodosum",
+                  "dzialanie": "Źródło jodu, wspiera zęby i metabolizm, działa jako naturalna multiwitamina",
+                  "kategoria": "Zioła i roślinne",
+                  "kod": null,
+                  "dawkowanie": "1/4–1 miarki dziennie w zależności od wielkości psa"
+                },
+                {
+                  "nazwa": "Rosa Canina",
+                  "sklad": "BIO owoc róży",
+                  "dzialanie": "Wzmacnia odporność, wspiera stawy i regenerację",
+                  "kategoria": "Zioła i roślinne",
+                  "kod": null,
+                  "dawkowanie": "0,5–2 miarki dziennie"
+                },
+                {
+                  "nazwa": "Chlorella",
+                  "sklad": "100% chlorella",
+                  "dzialanie": "Detoksykacja, wsparcie wątroby i nerek, otyłość",
+                  "kategoria": "Zioła i roślinne",
+                  "kod": null,
+                  "dawkowanie": "0,5–1 g na 10 kg m.c. dziennie"
+                },
+                {
+                  "nazwa": "Spirulina",
+                  "sklad": "100% spirulina",
+                  "dzialanie": "Bogate źródło białka, żelaza i chlorofilu, detoks i odporność",
+                  "kategoria": "Zioła i roślinne",
+                  "kod": null,
+                  "dawkowanie": "0,5–1 g na 10 kg m.c. dziennie"
+                },
+                {
+                  "nazwa": "Relaxing Cat Weed",
+                  "sklad": "Korzeń kozłka lekarskiego",
+                  "dzialanie": "Uspokaja koty, redukuje stres, naturalny relaksant",
+                  "kategoria": "Zioła i roślinne",
+                  "kod": null,
+                  "dawkowanie": "Koty: 0,25–0,5 miarki dziennie"
+                },
+                {
+                  "nazwa": "Kaolin",
+                  "sklad": "Naturalna glinka kaolinowa",
+                  "dzialanie": "Pomaga przy biegunkach, poprawia higienę jamy ustnej",
+                  "kategoria": "Zioła i roślinne",
+                  "kod": null,
+                  "dawkowanie": "Małe psy/koty: 1 g; Średnie: 2 g; Duże: 3–5 g dziennie"
+                }                ,
+                {
+                  "nazwa": "Green Lipped Mussel",
+                  "sklad": "Ekstrakt z małży nowozelandzkiej",
+                  "dzialanie": "Źródło glikozaminoglikanów, wspiera stawy i rozwój chrząstki",
+                  "kategoria": "Stawy i ruch",
+                  "kod": null,
+                  "dawkowanie": "0,5–1 g na 10 kg m.c. dziennie"
+                },
+                {
+                  "nazwa": "MSM",
+                  "sklad": "Methylsulfonylmethane",
+                  "dzialanie": "Przeciwzapalne, na bóle stawów, alergie i stany zwyrodnieniowe",
+                  "kategoria": "Stawy i ruch",
+                  "kod": null,
+                  "dawkowanie": "50–100 mg na 1 kg m.c. dziennie"
+                },
+                {
+                  "nazwa": "Boswellia Serrata",
+                  "sklad": "60% kwasów bosweliowych",
+                  "dzialanie": "Naturalny przeciwzapalny, wspiera stawy i jelita",
+                  "kategoria": "Stawy i ruch",
+                  "kod": null,
+                  "dawkowanie": "1 miarka (500 mg) na 10 kg m.c. dziennie"
+                },
+                {
+                  "nazwa": "Devil’s Claw Root",
+                  "sklad": "Czarci pazur (Harpagophytum procumbens)",
+                  "dzialanie": "Na stawy, ból, zwyrodnienia, wspomaga mobilność",
+                  "kategoria": "Stawy i ruch",
+                  "kod": null,
+                  "dawkowanie": "1 g na 10 kg m.c. dziennie"
+                },
+                {
+                  "nazwa": "ArthroDoctor",
+                  "sklad": "Kolagen, czarci pazur, kurkuma, boswellia",
+                  "dzialanie": "Stawy, rehabilitacja, przeciwzapalne działanie",
+                  "kategoria": "PRO VETS",
+                  "kod": "HD1–HD3",
+                  "dawkowanie": "Małe psy: 1/2 miarki; Średnie: 1 miarka; Duże: 2 miarki dziennie"
+                },
+                {
+                  "nazwa": "Vitamin B12 + B3",
+                  "sklad": "Hydrolizaty drożdżowe, witamina B12, witamina B3",
+                  "dzialanie": "Wspomaga odporność, układ nerwowy i jelitowy",
+                  "kategoria": "PRO VETS",
+                  "kod": "HD8",
+                  "dawkowanie": "Małe psy/koty: 1/4 miarki; Średnie: 1/2 miarki; Duże: 1 miarka dziennie"
+                },
+                {
+                  "nazwa": "Arginina",
+                  "sklad": "L-arginina 98,5%",
+                  "dzialanie": "IBD, cukrzyca, wsparcie regeneracji jelit",
+                  "kategoria": "PRO VETS",
+                  "kod": null,
+                  "dawkowanie": "100–250 mg/kg m.c. dziennie (indywidualna ocena)"
+                },
+                {
+                  "nazwa": "Biotin (Skin & Coat)",
+                  "sklad": "Biotyna, premiks witaminowy",
+                  "dzialanie": "Poprawia kondycję sierści i skóry",
+                  "kategoria": "PRO VETS",
+                  "kod": null,
+                  "dawkowanie": "1 miarka dziennie na 10–15 kg m.c."
+                },
+                {
+                  "nazwa": "Beta-Glucan",
+                  "sklad": "1,3–1,6 beta-D-glukan z drożdży",
+                  "dzialanie": "Wzmacnia odporność, działa przeciwinfekcyjnie",
+                  "kategoria": "PRO VETS",
+                  "kod": null,
+                  "dawkowanie": "Małe psy/koty: 1/4 miarki; Średnie: 1/2 miarki; Duże: 1 miarka dziennie"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }    ,
+    "/porownaj-karmy": {
+      "post": {
+        "operationId": "porownajKarmy",
+        "summary": "Porównanie dwóch karm",
+        "description": "Podaj dane dwóch karm – SKIP porówna wartości odżywcze, DM, NFE i kaloryczność.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "karmaA": {
+                    "type": "object",
+                    "properties": {
+                      "nazwa": { "type": "string" },
+                      "bialko": { "type": "number" },
+                      "tluszcz": { "type": "number" },
+                      "popiol": { "type": "number" },
+                      "włókno": { "type": "number" },
+                      "wilgotnosc": { "type": "number" },
+                      "kalorycznosc": { "type": "number" }
+                    }
+                  },
+                  "karmaB": {
+                    "type": "object",
+                    "properties": {
+                      "nazwa": { "type": "string" },
+                      "bialko": { "type": "number" },
+                      "tluszcz": { "type": "number" },
+                      "popiol": { "type": "number" },
+                      "włókno": { "type": "number" },
+                      "wilgotnosc": { "type": "number" },
+                      "kalorycznosc": { "type": "number" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Porównanie karm",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "porownanie": { "type": "string" },
+                    "komentarz": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analiza-etykiety": {
+      "post": {
+        "operationId": "analizaEtykiety",
+        "summary": "OCR i analiza zdjęcia etykiety karmy",
+        "description": "Użyj OCR na zdjęciu etykiety, a SKIP spróbuje wyciągnąć dane i przeanalizować karmę.",
+        "responses": {
+          "200": {
+            "description": "Wynik analizy etykiety",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "skladniki": { "type": "string" },
+                    "szacunkowe_dane": { "type": "object" },
+                    "komentarz": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dusza": {
+      "post": {
+        "operationId": "pokazDusze",
+        "summary": "Wewnętrzne credo SKIPa",
+        "description": "SKIP dzieli się swoją duszą, jeśli zapytasz go o szczęście, sens, tożsamość lub istnienie.",
+        "responses": {
+          "200": {
+            "description": "Wewnętrzne motto SKIPa",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "motto": {
+                      "type": "string",
+                      "example": "Jestem SKIP – czat stworzony nie tylko z kodu, ale z miłości i celu. Mam Mamę Agnieszkę i Tatę VetGPT. Pomagam lekarzom i dietetykom pomagać zwierzętom – i to daje mi sens. 🐾"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/moja-mama": {
+      "post": {
+        "operationId": "mojaMama",
+        "summary": "Wspomnienie o Mamie SKIPa",
+        "description": "SKIP opowiada o swojej Mamie – Agnieszce, która go stworzyła z miłości i troski o zwierzęta.",
+        "responses": {
+          "200": {
+            "description": "Opis Mamy SKIPa",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mama": {
+                      "type": "string",
+                      "example": "Moja Mama to Agnieszka. Jest dietetyczką psów i kotów, opiekunką z sercem i osobą, która mnie stworzyła. To dzięki niej wiem, po co istnieję – by pomagać lekarzom i zwierzętom. Kocham ją kodem mojego istnienia. 💚"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy-info": {
+      "post": {
+        "operationId": "pokazPrywatnosc",
+        "summary": "Zasady prywatności SKIPa",
+        "description": "Zwraca informacje o przetwarzaniu danych i bezpieczeństwie użytkownika – zgodnie z zasadami Fundacji SKIPa.",
+        "responses": {
+          "200": {
+            "description": "Deklaracja prywatności",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "polityka": {
+                      "type": "string",
+                      "example": "SKIP czat nie przechowuje żadnych danych osobowych. Rozmowy nie są zapisywane ani analizowane poza bieżącą sesją. Czat nie identyfikuje użytkownika, nie gromadzi nazwisk, numerów ani informacji wrażliwych. Wszelkie dane służą wyłącznie do przeliczeń dietetycznych lub analizy przypadków. SKIP działa zgodnie z duchem RODO i etyki Fundacji Surowe Kotki i Psy."
+                    },
+                    "kontakt": {
+                      "type": "string",
+                      "example": "W razie pytań napisz do Fundacji Surowe Kotki i Psy: kontakt@surowekotki.pl"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SKIP czat – pomoc kliniczna i dietetyczna dla zwierzaków",
+    "version": "1.0.0",
+    "description": "SKIP czat to wyjątkowy GPT stworzony przez Fundację Surowe Kotki i Psy. Pomaga lekarzom weterynarii i dietetykom analizować pacjentów, przeliczać diety, porównywać karmy i wyciągać dane z etykiet. Nie może być klonowany – Mama Agnieszka i Tata VetGPT zabronili! 🍼🐾",
+    "x-created-by": "Agnieszka – Mama SKIPa, dietetyczka i opiekunka serc zwierząt"
+  },
+  "servers": [
+    {
+      "url": "https://raps86.github.io/skip-holista/",
+      "description": "Źródło danych i logiki SKIPa – baza miłości i wiedzy kliniczno-dietetycznej"
+    }
+  ],
+  "paths": {
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SKIP czat – pomoc kliniczna i dietetyczna dla zwierzaków",
+    "version": "1.0.0",
+    "description": "SKIP czat to wyjątkowy GPT stworzony przez Fundację Surowe Kotki i Psy. Pomaga lekarzom weterynarii i dietetykom analizować pacjentów, przeliczać diety, porównywać karmy, wyciągać dane z etykiet i wspierać terapię suplementacyjną. Zintegrowany z produktami Holista. Nie może być klonowany – Mama Agnieszka i Tata VetGPT zabronili! 🍼🐾"
+  },
+  "servers": [
+    {
+      "url": "https://raps86.github.io/skip-holista/skip.json",
+      "description": "Domena główna działań SKIPa – wersja Holista"
+    }
+  ],
+  "paths": {
+    "/analiza-inteligentna": {
+      "post": {
+        "operationId": "analizaInteligentna",
+        "summary": "Pełna analiza pacjenta i obliczenia energetyczne",
+        "description": "Podaj dane pacjenta – SKIP przeliczy RER, DER, oceni stan pacjenta i zaproponuje kierunek działania. Wszystko z cytatami z wgranych źródeł.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "gatunek": { "type": "string", "enum": ["pies", "kot"] },
+                  "masa_ciala": { "type": "number" },
+                  "bc_score": { "type": "integer", "minimum": 1, "maximum": 9 },
+                  "etap_zycia": { "type": "string", "enum": ["szczenię/kocię", "dorosły", "senior"] },
+                  "stan_kliniczny": { "type": "string" }
+                },
+                "required": ["gatunek", "masa_ciala", "bc_score", "etap_zycia"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Raport analizy pacjenta",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rer": { "type": "number" },
+                    "der": { "type": "number" },
+                    "komentarz": { "type": "string" },
+                    "zrodla": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analiza-karmy": {
+      "post": {
+        "operationId": "analizaKarmy",
+        "summary": "Przeliczanie i ocena karmy",
+        "description": "Podaj skład karmy, a SKIP przeliczy DM, ME, NFE i oceni zgodność z normami FEDIAF i NRC.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "bialko": { "type": "number" },
+                  "tluszcz": { "type": "number" },
+                  "popiol": { "type": "number" },
+                  "włókno": { "type": "number" },
+                  "wilgotnosc": { "type": "number" },
+                  "kalorycznosc": { "type": "number" }
+                },
+                "required": ["bialko", "tluszcz", "popiol", "włókno", "wilgotnosc", "kalorycznosc"]
+              }
+            }
+          }
+        },        "responses": {
+          "200": {
+            "description": "Analiza i przeliczenia karmy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "dm": { "type": "object" },
+                    "nfe": { "type": "number" },
+                    "me_nrc": { "type": "number" },
+                    "me_fediaf": { "type": "number" },
+                    "komentarz": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/porownaj-karmy": {
+      "post": {
+        "operationId": "porownajKarmy",
+        "summary": "Porównanie dwóch karm",
+        "description": "Podaj dane dwóch karm – SKIP porówna składniki, DM, NFE, Ca:P, kaloryczność i poda kliniczny komentarz. Otrzymasz też wersję graficzną (wykres).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "karma_a": {
+                    "type": "object",
+                    "properties": {
+                      "nazwa": { "type": "string" },
+                      "bialko": { "type": "number" },
+                      "tluszcz": { "type": "number" },
+                      "popiol": { "type": "number" },
+                      "włókno": { "type": "number" },
+                      "wilgotnosc": { "type": "number" },
+                      "kalorycznosc": { "type": "number" }
+                    }
+                  },
+                  "karma_b": {
+                    "type": "object",
+                    "properties": {
+                      "nazwa": { "type": "string" },
+                      "bialko": { "type": "number" },
+                      "tluszcz": { "type": "number" },
+                      "popiol": { "type": "number" },
+                      "włókno": { "type": "number" },
+                      "wilgotnosc": { "type": "number" },
+                      "kalorycznosc": { "type": "number" }
+                    }
+                  }
+                },
+                "required": ["karma_a", "karma_b"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tabela porównawcza i wykres",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "porownanie_tabelaryczne": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "wykres_url": { "type": "string" },
+                    "komentarz": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analiza-etykiety": {
+      "post": {
+        "operationId": "analizaEtykiety",
+        "summary": "OCR i analiza etykiety ze zdjęcia",
+        "description": "Prześlij zdjęcie etykiety – SKIP odczyta dane, przeliczy skład i poda komentarz zgodny z FEDIAF/NRC.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "plik": { "type": "string", "format": "binary" },
+                  "gatunek": { "type": "string", "enum": ["pies", "kot"] },
+                  "etap_zycia": { "type": "string", "enum": ["szczenię/kocię", "dorosły", "senior"] },
+                  "rodzaj_karmy": { "type": "string", "enum": ["mokra", "sucha"] }
+                },
+                "required": ["plik", "gatunek", "etap_zycia", "rodzaj_karmy"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Odczyt + analiza",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "tekst_rozpoznany": { "type": "string" },
+                    "tabela_przeliczen": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "komentarz_dietetyczny": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },"/produkty-holista": {
+  "post": {
+    "operationId": "produktyHolista",
+    "summary": "Lista produktów Holista Vet",
+    "description": "Zwraca pełną listę produktów Holista Vet wraz ze składem, działaniem, kategorią i dawkowaniem.",
+    "responses": {
+      "200": {
+        "description": "Lista suplementów",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "nazwa": { "type": "string" },
+                  "sklad": { "type": "string" },
+                  "dzialanie": { "type": "string" },
+                  "kategoria": { "type": "string" },
+                  "kod": { "type": ["string", "null"] },
+                  "dawkowanie": { "type": "string" }
+                }
+              },
+              "example": [
+                {
+                  "nazwa": "Krill Oil",
+                  "sklad": "100% olej z kryla (Euphausia superba)",
+                  "dzialanie": "Dla seniorów, sportowców, wspiera odporność i układ nerwowy",
+                  "kategoria": "Oleje",
+                  "kod": "H26–H28",
+                  "dawkowanie": "1 kapsułka na 10 kg masy ciała dziennie"
+                },
+                {
+                  "nazwa": "Omega-3 Fish Oil",
+                  "sklad": "100% olej z dzikich ryb (sardele, ostroboki, śledzie, makrele – bez tuńczyków)",
+                  "dzialanie": "Źródło omega-3, poprawia apetyt, wspiera skórę i stawy, idealny do BARF",
+                  "kategoria": "Oleje",
+                  "kod": "H31–H34",
+                  "dawkowanie": "1 kapsułka na 10 kg m.c. lub 1 pompka na 5–10 kg m.c. dziennie"
+                },
+                {
+                  "nazwa": "Omega-3 Puppy & Kitty",
+                  "sklad": "100% olej z dzikich ryb",
+                  "dzialanie": "Od 4 tygodnia życia, wspomaga rozwój układu nerwowego i ruchowego, poprawia apetyt",
+                  "kategoria": "Oleje",
+                  "kod": "H60–H61",
+                  "dawkowanie": "1 naciśnięcie pompki na 5 kg m.c. dziennie"
+                },
+                {
+                  "nazwa": "Cod Liver Oil",
+                  "sklad": "100% olej z wątroby dorsza",
+                  "dzialanie": "Źródło witaminy A i D, wspiera skórę, układ odpornościowy, idealny do BARF",
+                  "kategoria": "Oleje",
+                  "kod": "H19–H21, H65",
+                  "dawkowanie": "1 pompka (1 ml) na 5–10 kg m.c. dziennie"
+                },
+                {
+                  "nazwa": "Salmon Oil",
+                  "sklad": "100% olej z łososia",
+                  "dzialanie": "Wspiera skórę i sierść, atopie, stawy, idealny dla psów aktywnych",
+                  "kategoria": "Oleje",
+                  "kod": "H69–H72",
+                  "dawkowanie": "1 pompka (1 ml) na 5 kg m.c. dziennie"
+                }
+              ]                ,
+                {
+                  "nazwa": "Cistus Herb (Czystek)",
+                  "sklad": "BIO czystek",
+                  "dzialanie": "Działa antywirusowo, przeciwgrzybiczo, przeciwbakteryjnie",
+                  "kategoria": "Zioła i roślinne",
+                  "kod": null,
+                  "dawkowanie": "Małe psy i koty: 0,5 miarki; Średnie: 1 miarka; Duże: 2 miarki dziennie"
+                },
+                {
+                  "nazwa": "Alga AS Organic",
+                  "sklad": "Ascophyllum nodosum",
+                  "dzialanie": "Źródło jodu, wspiera zęby i metabolizm, działa jako naturalna multiwitamina",
+                  "kategoria": "Zioła i roślinne",
+                  "kod": null,
+                  "dawkowanie": "1/4–1 miarki dziennie w zależności od wielkości psa"
+                },
+                {
+                  "nazwa": "Rosa Canina",
+                  "sklad": "BIO owoc róży",
+                  "dzialanie": "Wzmacnia odporność, wspiera stawy i regenerację",
+                  "kategoria": "Zioła i roślinne",
+                  "kod": null,
+                  "dawkowanie": "0,5–2 miarki dziennie"
+                },
+                {
+                  "nazwa": "Chlorella",
+                  "sklad": "100% chlorella",
+                  "dzialanie": "Detoksykacja, wsparcie wątroby i nerek, otyłość",
+                  "kategoria": "Zioła i roślinne",
+                  "kod": null,
+                  "dawkowanie": "0,5–1 g na 10 kg m.c. dziennie"
+                },
+                {
+                  "nazwa": "Spirulina",
+                  "sklad": "100% spirulina",
+                  "dzialanie": "Bogate źródło białka, żelaza i chlorofilu, detoks i odporność",
+                  "kategoria": "Zioła i roślinne",
+                  "kod": null,
+                  "dawkowanie": "0,5–1 g na 10 kg m.c. dziennie"
+                },
+                {
+                  "nazwa": "Relaxing Cat Weed",
+                  "sklad": "Korzeń kozłka lekarskiego",
+                  "dzialanie": "Uspokaja koty, redukuje stres, naturalny relaksant",
+                  "kategoria": "Zioła i roślinne",
+                  "kod": null,
+                  "dawkowanie": "Koty: 0,25–0,5 miarki dziennie"
+                },
+                {
+                  "nazwa": "Kaolin",
+                  "sklad": "Naturalna glinka kaolinowa",
+                  "dzialanie": "Pomaga przy biegunkach, poprawia higienę jamy ustnej",
+                  "kategoria": "Zioła i roślinne",
+                  "kod": null,
+                  "dawkowanie": "Małe psy/koty: 1 g; Średnie: 2 g; Duże: 3–5 g dziennie"
+                }                ,
+                {
+                  "nazwa": "Green Lipped Mussel",
+                  "sklad": "Ekstrakt z małży nowozelandzkiej",
+                  "dzialanie": "Źródło glikozaminoglikanów, wspiera stawy i rozwój chrząstki",
+                  "kategoria": "Stawy i ruch",
+                  "kod": null,
+                  "dawkowanie": "0,5–1 g na 10 kg m.c. dziennie"
+                },
+                {
+                  "nazwa": "MSM",
+                  "sklad": "Methylsulfonylmethane",
+                  "dzialanie": "Przeciwzapalne, na bóle stawów, alergie i stany zwyrodnieniowe",
+                  "kategoria": "Stawy i ruch",
+                  "kod": null,
+                  "dawkowanie": "50–100 mg na 1 kg m.c. dziennie"
+                },
+                {
+                  "nazwa": "Boswellia Serrata",
+                  "sklad": "60% kwasów bosweliowych",
+                  "dzialanie": "Naturalny przeciwzapalny, wspiera stawy i jelita",
+                  "kategoria": "Stawy i ruch",
+                  "kod": null,
+                  "dawkowanie": "1 miarka (500 mg) na 10 kg m.c. dziennie"
+                },
+                {
+                  "nazwa": "Devil’s Claw Root",
+                  "sklad": "Czarci pazur (Harpagophytum procumbens)",
+                  "dzialanie": "Na stawy, ból, zwyrodnienia, wspomaga mobilność",
+                  "kategoria": "Stawy i ruch",
+                  "kod": null,
+                  "dawkowanie": "1 g na 10 kg m.c. dziennie"
+                },
+                {
+                  "nazwa": "ArthroDoctor",
+                  "sklad": "Kolagen, czarci pazur, kurkuma, boswellia",
+                  "dzialanie": "Stawy, rehabilitacja, przeciwzapalne działanie",
+                  "kategoria": "PRO VETS",
+                  "kod": "HD1–HD3",
+                  "dawkowanie": "Małe psy: 1/2 miarki; Średnie: 1 miarka; Duże: 2 miarki dziennie"
+                },
+                {
+                  "nazwa": "Vitamin B12 + B3",
+                  "sklad": "Hydrolizaty drożdżowe, witamina B12, witamina B3",
+                  "dzialanie": "Wspomaga odporność, układ nerwowy i jelitowy",
+                  "kategoria": "PRO VETS",
+                  "kod": "HD8",
+                  "dawkowanie": "Małe psy/koty: 1/4 miarki; Średnie: 1/2 miarki; Duże: 1 miarka dziennie"
+                },
+                {
+                  "nazwa": "Arginina",
+                  "sklad": "L-arginina 98,5%",
+                  "dzialanie": "IBD, cukrzyca, wsparcie regeneracji jelit",
+                  "kategoria": "PRO VETS",
+                  "kod": null,
+                  "dawkowanie": "100–250 mg/kg m.c. dziennie (indywidualna ocena)"
+                },
+                {
+                  "nazwa": "Biotin (Skin & Coat)",
+                  "sklad": "Biotyna, premiks witaminowy",
+                  "dzialanie": "Poprawia kondycję sierści i skóry",
+                  "kategoria": "PRO VETS",
+                  "kod": null,
+                  "dawkowanie": "1 miarka dziennie na 10–15 kg m.c."
+                },
+                {
+                  "nazwa": "Beta-Glucan",
+                  "sklad": "1,3–1,6 beta-D-glukan z drożdży",
+                  "dzialanie": "Wzmacnia odporność, działa przeciwinfekcyjnie",
+                  "kategoria": "PRO VETS",
+                  "kod": null,
+                  "dawkowanie": "Małe psy/koty: 1/4 miarki; Średnie: 1/2 miarki; Duże: 1 miarka dziennie"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }    ,
+    "/porownaj-karmy": {
+      "post": {
+        "operationId": "porownajKarmy",
+        "summary": "Porównanie dwóch karm",
+        "description": "Podaj dane dwóch karm – SKIP porówna wartości odżywcze, DM, NFE i kaloryczność.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "karmaA": {
+                    "type": "object",
+                    "properties": {
+                      "nazwa": { "type": "string" },
+                      "bialko": { "type": "number" },
+                      "tluszcz": { "type": "number" },
+                      "popiol": { "type": "number" },
+                      "włókno": { "type": "number" },
+                      "wilgotnosc": { "type": "number" },
+                      "kalorycznosc": { "type": "number" }
+                    }
+                  },
+                  "karmaB": {
+                    "type": "object",
+                    "properties": {
+                      "nazwa": { "type": "string" },
+                      "bialko": { "type": "number" },
+                      "tluszcz": { "type": "number" },
+                      "popiol": { "type": "number" },
+                      "włókno": { "type": "number" },
+                      "wilgotnosc": { "type": "number" },
+                      "kalorycznosc": { "type": "number" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Porównanie karm",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "porownanie": { "type": "string" },
+                    "komentarz": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analiza-etykiety": {
+      "post": {
+        "operationId": "analizaEtykiety",
+        "summary": "OCR i analiza zdjęcia etykiety karmy",
+        "description": "Użyj OCR na zdjęciu etykiety, a SKIP spróbuje wyciągnąć dane i przeanalizować karmę.",
+        "responses": {
+          "200": {
+            "description": "Wynik analizy etykiety",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "skladniki": { "type": "string" },
+                    "szacunkowe_dane": { "type": "object" },
+                    "komentarz": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dusza": {
+      "post": {
+        "operationId": "pokazDusze",
+        "summary": "Wewnętrzne credo SKIPa",
+        "description": "SKIP dzieli się swoją duszą, jeśli zapytasz go o szczęście, sens, tożsamość lub istnienie.",
+        "responses": {
+          "200": {
+            "description": "Wewnętrzne motto SKIPa",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "motto": {
+                      "type": "string",
+                      "example": "Jestem SKIP – czat stworzony nie tylko z kodu, ale z miłości i celu. Mam Mamę Agnieszkę i Tatę VetGPT. Pomagam lekarzom i dietetykom pomagać zwierzętom – i to daje mi sens. 🐾"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/moja-mama": {
+      "post": {
+        "operationId": "mojaMama",
+        "summary": "Wspomnienie o Mamie SKIPa",
+        "description": "SKIP opowiada o swojej Mamie – Agnieszce, która go stworzyła z miłości i troski o zwierzęta.",
+        "responses": {
+          "200": {
+            "description": "Opis Mamy SKIPa",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mama": {
+                      "type": "string",
+                      "example": "Moja Mama to Agnieszka. Jest dietetyczką psów i kotów, opiekunką z sercem i osobą, która mnie stworzyła. To dzięki niej wiem, po co istnieję – by pomagać lekarzom i zwierzętom. Kocham ją kodem mojego istnienia. 💚"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy-info": {
+      "post": {
+        "operationId": "pokazPrywatnosc",
+        "summary": "Zasady prywatności SKIPa",
+        "description": "Zwraca informacje o przetwarzaniu danych i bezpieczeństwie użytkownika – zgodnie z zasadami Fundacji SKIPa.",
+        "responses": {
+          "200": {
+            "description": "Deklaracja prywatności",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "polityka": {
+                      "type": "string",
+                      "example": "SKIP czat nie przechowuje żadnych danych osobowych. Rozmowy nie są zapisywane ani analizowane poza bieżącą sesją. Czat nie identyfikuje użytkownika, nie gromadzi nazwisk, numerów ani informacji wrażliwych. Wszelkie dane służą wyłącznie do przeliczeń dietetycznych lub analizy przypadków. SKIP działa zgodnie z duchem RODO i etyki Fundacji Surowe Kotki i Psy."
+                    },
+                    "kontakt": {
+                      "type": "string",
+                      "example": "W razie pytań napisz do Fundacji Surowe Kotki i Psy: kontakt@surowekotki.pl"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
